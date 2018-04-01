@@ -1,0 +1,581 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en-US">
+<head>
+	<title>Usage Instructions</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<meta name="keywords" content="T3D, usage, instructions, cut, scene, cam">
+	<meta name="description" content="Usage instructions for the Cut Scene Cam.">
+	<link href="style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<h1>
+		Table of Contents:</h1>
+	<a href="Usage_Instructions.html#Instruction1" target="_top">Cut Scene Cam Overview</a><br>
+	<a class="Steps1" href="Usage_Instructions.html#Instruction3" target="_top">Features List</a><br>
+	<a href="Usage_Instructions.html#Instruction23" target="_top">Cut Scene Cam Editor</a><br>
+	<a class="Steps1" href="Usage_Instructions.html#Instruction24" target="_top">CSCE Overview</a><br>
+	<a class="Steps1" href="Usage_Instructions.html#Instruction25" target="_top">CSCE Object Creation</a><br>
+	<a class="Steps1" href="Usage_Instructions.html#Instruction35" target="_top">Path Management</a><br>
+	<a class="Steps1" href="Usage_Instructions.html#Instruction26" target="_top">CSCE Pages</a><br>
+	<a class="Steps1" href="Usage_Instructions.html#Instruction27" target="_top">CSCE Bottom Buttons</a><br>
+	<a href="Usage_Instructions.html#Instruction6" target="_top">Setting Variable Values</a><br>
+	<a class="Steps1" href="Usage_Instructions.html#Instruction7" target="_top">General Rules</a><br>
+	<a href="Usage_Instructions.html#Instruction28" target="_top">Other Variables</a><br>
+	<a href="Usage_Instructions.html#Instruction38" target="_top">Adding New Datablocks</a><br>
+	<a href="Usage_Instructions.html#Instruction13" target="_top">Application Programming Interface (API)</a><br>
+	<a class="Steps1" href="Usage_Instructions.html#Instruction16" target="_top">Starting a Cut Scene</a><br>
+	<a class="Steps1" href="Usage_Instructions.html#Instruction14" target="_top">Choreography</a><br>
+	<a class="Steps1" href="Usage_Instructions.html#Instruction37" target="_top">Path Alteration Scripting</a><br>
+	<a href="Usage_Instructions.html#Instruction12" target="_top">Overview of Source Code Changes</a><br>
+	<a href="Usage_Instructions.html#Instruction47" target="_top">Known Issues</a><br>
+	<br>
+	<a name="Instruction1"></a>
+	<h1>
+		Cut Scene Cam Overview:</h1>
+	<h3>
+		The Cut Scene Cam is mainly about camera work, with a little bit of choreography thrown in.
+	</h3>
+	<a name="Instruction3"></a>
+	<h2>
+		Features List:</h2>
+	<ul class="List1">
+		<li>Create a pathed camera object and set it to follow a given path.</li>
+		<li>Per-node speed and smoothing options.</li>
+		<li>Can pause on a node for a specific amount of time.</li>
+		<li>The camera can be set to shake for a certain period of time per-node, with options for the amount of shaking.</li>
+		<li>Can set a fade to black GUI overlay for the beginning of each path, and for the end of the cut scene as a whole.
+		Can select a color other than black as well.</li>
+		<li>When the camera reaches the end of the path, it can be set to (in order of highest priority first):
+		<ol class="List2">
+	<li>loop along the same path</li>
+	<li>reverse its direction along the same path and pingpong</li>
+	<li>start on a new path (popping to the first node of the new path), this can be done after it has done any of the above</li>
+	<li>switch back to your normal player/camera controls, this can be done after it has done any of the above</li>
+	</ol></li>
+		<li>Can set a counter for how many times you would like the camera to loop or pingpong before switching back to the player or
+		normal camera. Can also be set to go around infinitely, and if not set to infinite, it can go to a new path after it is done looping.</li>
+		<li>Can specify a function call for the start of each path, plus onEnd is called when its all over (to add in your own
+		schedules and other custom scripts for choreographing a scene).</li>
+		<li>Focal mode options:<ol class="List2">
+	<li>have the focal point be a direction (can optionally choose an axis of rotation)</li>
+	<li>have the focal point be the direction it's traveling in</li>
+	<li>have the focal point be a static or moving object/player/bot (with optional offset)</li>
+	<li>have the focal point be a static position</li>
+	</ol></li>
+		<li>Cut Scene Cam Editor:<ul class="List1">
+	<li>can edit any options listed above</li>
+	<li>can save your mission from the editor</li>
+	<li>can start a cut scene to test it; the editor will hide during the cut scene and come back after its over</li>
+	<li>can change the time scale, zoom speed, and shake data for each path</li>
+	<li>can change the FOV, speed, shaking, smoothing type, and type per-node</li>
+	<li>can open the PostFX Manager from a button (to setup DOF and whatnot)</li>
+	<li>can change all focus options from the editor</li>
+	<li>can test camera shake setting from the editor</li>
+	<li>has path and node creation, deletion, editing, and management options; including all path options from
+	<a href="https://github.com/TwistedJenius/UAISK" target="_blank">The UAISK's AIME</a></li>
+	</ul></li>
+		<li>Compatible with <a href="https://github.com/GarageGames/Torque3D" target="_blank">T3D MIT 3.10</a>.
+		<a href="https://github.com/TwistedJenius/UAISK" target="_blank">UAISK</a> and
+		<a href="https://github.com/faustlogic/Torque3D-plus-AFX" target="_blank">AFX</a> compatible.</li>
+	</ul>
+	<br>
+	<hr class="Line2">
+	<br>
+	<a name="Instruction23"></a>
+	<h1>
+		Cut Scene Cam Editor:</h1>
+	<a name="Instruction24"></a>
+	<h2>
+		CSCE Overview:</h2>
+	<h3>
+		A path is like a type of folder (or simgroup) that contains nodes. Nodes are invisible objects that are placed around your mission.
+		The Cut Scene Cam uses both of these to store the data that it uses.
+		To help aid you when creating and adjusting these, the Cut Scene Cam includes an editor called the Cut Scene Cam Editor (CSCE).<br>
+		<br>
+		Press "<b>Alt S</b>" to open the editor. You can also add the Cut Scene Cam Editor to the "Edit" drop down menu in the world editor
+		by doing the "Optional Custom Install Instructions".<br>
+		<br>
+		The default Cut Scene Cam Editor should look similar to the following image.<br>
+	</h3>
+	<img border="0" hspace="0" alt="CSCE Top" src="CSCE_Top.png" width="340" height="104"><br>
+	<br>
+	<ol class="List2">
+		<li>Title: At the top of the editor you'll see that it says "Cut Scene Cam Editor - " then the name of the page you are currently on.</li>
+		<li>Page Selector: From the page selector you can set what information you would like the editor to display. Detailed descriptions
+			of each page are <a href="Usage_Instructions.html#Instruction26" target="_top">below</a>.</li>
+		<li>Deselect Textbox: If you have selected a textbox to type in a value, you will be unable to move using the keyboard and will type
+			instead. You can unselect the textbox using this button. After it is no longer selected, you are free to move your character
+			or camera around again using the keyboard.</li>
+		<li>Path Selector: From here you can select which path you would like to edit from a list of all previously created paths in
+			the mission. When you select a path with the CSCE, it will also show up selected in the world editor if the world editor is
+			open. When you select a path, you'll see all of its values in the editor until you apply, or select a different path. If
+			the path doesn't have a value on it, the editor will show the overall default value. This element is not on the Creation page.</li>
+	</ol>
+	<a name="Instruction25"></a>
+	<h2>
+		CSCE Object Creation:</h2>
+	<h3>
+		Path and node creation and deletion can only be done from the "Creation" page. All other pages are only used for editing
+		these existing objects or for supplemental tasks.<br>
+		<br>
+		<b>"New Path":</b> When pressed, will create a new path. A path can be selected from the dropdown menu to the right of this button.<br>
+		<br>
+		<b>"New Node":</b> When pressed, will create a new node on the currently selected path. This node will be placed at your current
+		position. The node's position will be the current position of the player or camera; depending on which one you are using at the time.
+		A node can be selected from the dropdown menu to the right of this button.<br>
+		<br>
+		<b>"Delete Selected Path":</b> When pressed, the currently selected path will be permanently deleted.<br>
+		<br>
+		<b>"Delete Selected Node":</b> When pressed, the currently selected node will be permanently deleted.<br>
+		<br>
+		To prevent accidents, the "delete" buttons can be disabled from a <a href="Usage_Instructions.html#Instruction28" target="_top">global
+			variable</a> at the top of <i>CSC_Editor.cs</i>.
+	</h3>
+	<a name="Instruction35"></a>
+	<h2>
+		Path Management:</h2>
+	<h3>
+		The tools on the "Path Management" page of the editor allow you to manage a path as just one object instead of having to make
+		separate changes to each individual node that makes up that path. Changing individual node and path properties can be done from
+		the "Paths" and "Nodes" pages.<br>
+		<br>
+		The "Clone Path" button will copy the path and apply the given offset to the new copy. Cloning makes a new copy of the path with
+		copies of each node and uses the same properties for the nodes and path, plus an optional offset to each node's position. "Move
+		Path" applies a given offset to each node on the selected path without making a new copy.<br>
+		<br>
+		The "Scale Path" feature allows all 3 axes to be scaled independently. Values are given as a percentage. The values can be positive
+		to make the path larger, or negative to make it smaller. Zero can also be used to not have an axis scale. Values of less than
+		-100 will flip the path inside out; because it's making the path more than 100% smaller; and -100 exactly will make the path
+		into a dot.<br>
+		<br>
+		Scale can be given as just 1 value to have the path scale evenly in all directions. Given as 2 values, the path will scale on
+		the X and Y axes only; or given as all 3 values for separate X, Y, and Z scaling.<br>
+		<br>
+		You can use the "Flip Path" button to turn over a path along its X, Y, Z or All axes.<br>
+		<br>
+		The "Merge Paths" button will take all the nodes from the selected path and add them to the end of a second selected path; and
+		will then delete the first path which is now node-less. The second path is the one that is selected from the dropdown menu to
+		the left of this button. <span class="Warn1">Warning:</span> Using the "Merge Paths" feature while the mission editor is open
+		can cause your game to crash.<br>
+		<br>
+		The "Split Path" button will take all nodes after the given amount and move them from the original path onto a newly created
+		path.<br>
+		<br>
+		The "Reverse Path" button inverts the order the nodes are in along the path. This will cause any bots to move in the opposite
+		direction when traveling along the path.<br>
+		<br>
+		When open, the mission editor does not update the nodes' visual positions properly when using these commands. You may need to
+		close and reopen the mission editor to see the nodes' correctly updated positions.
+	</h3>
+	<a name="Instruction26"></a>
+	<h2>
+		CSCE Pages:</h2>
+	<h3>
+		The Cut Scene Cam Editor has 7 pages. They are: Creation, Paths, Nodes, Focus, Fade, Management, and Actions
+		<br>
+		If you don't see the setting you're looking for on one page, try another. Check the editor's text and tooltips for help with
+		any specific variables.<br>
+		<br>
+		<b>&bull; Creation</b><br>
+		Create and delete paths and nodes. Further details can be found in the <a href="Usage_Instructions.html#Instruction25"
+			target="_top">CSCE Object Creation</a> section above.<br>
+		<br>
+		<b>&bull; Paths</b><br>
+		On this page you can edit the properties of paths that have already been created. This page contains per-path properties. These are
+		properties which would not make sense to set on a per-node basis. Properties such as if and how the path loops, what path it go to
+		after the current one is finished. This page also allows you to set a <i>Function Call</i>. A Function Call is a line of script that
+		is executed using an <i>eval</i> when a path is first started. For more information about the Function Call,
+		<a href="Usage_Instructions.html#Instruction14" target="_top">check here</a>.<br>
+		<br>
+		<b>&bull; Nodes</b><br>
+		On this page you can edit the properties of nodes that have already been created. This page contains per-node properties. These are
+		properties which would not make sense to set on a per-path basis. Properties such as the order the nodes are in, and the speed and method
+		that the camera moves from one node to the next.<br>
+		<br>
+		<b>&bull; Focus</b><br>
+		On this page you can change the focus options. The <i>Focal Mode</i> sets what the camera should face and stay centered on. There are 4
+		focal modes to choose from: <i>Direction</i>, <i>Ahead</i>, <i>Object</i>, and <i>Location</i>.<br>
+		<ol class="List2">
+		<li><i>Direction</i> (which is the default) will set the camera to face a specific angle. You can select which axis you would like the camera
+		to rotate around, and the amount (in degrees from -360 to 360) you would like it to rotate.</li>
+		<li>The <i>Ahead</i> focal mode will simply have the camera face in the direction it is traveling in. Think of this like being on a roller coaster
+		in a first person view.</li>
+		<li>The <i>Object</i> focal mode will set the specified object to always be where the camera faces. The object can be a static object, a player,
+		or an AI bot. Examples for the latter two have been built in. You can also add an option <i>Offset</i> value which will allow the camera to
+		not have the object exactly centered.</li>
+		<li>Finally, there's the <i>Location</i> focal mode. This focal mode will point the camera at a specific position that you give it.</li>
+		</ol>
+		<b>&bull; Fade</b><br>
+		This page allows you to change the timing and color for fading in and out.<br>
+		<br>
+		<b>&bull; Management</b><br>
+		From this page you can change the attributes of each node on an entire path at one time. Attributes that can be changed include
+		scale, position, and direction. Further details can be found in the <a href="Usage_Instructions.html#Instruction35" target="_top">
+			Path Management</a> section above.<br>
+		<br>
+		<b>&bull; Actions</b><br>
+		On this page you can perform a variety of actions that will help you as a developer.<br>
+		<br>
+		It is important to give paths a unique name when creating new ones. Unnamed paths will automatically be named "PathXX",
+		with XX being their number based on order of creation. However, if for some reason the paths' order gets mixed up, you can
+		use the "Rename Paths" button to reorder them again. Giving each path a unique name both avoids some minor issues and helps
+		you when editing. This button will also automatically name all of the waypoint nodes on your paths as "NodeXX", with "XX" being
+		there number in order.<br>
+		<br>
+		You can also test a camera's or datablock's shake settings.<br>
+		<br>
+	</h3>
+	<a name="Instruction27"></a>
+	<h2>
+		CSCE Bottom Buttons:</h2>
+	<h3>
+		After you have made all changes you wish to make to a single path or node, use the "Apply Path Edits" or "Apply Node Edits" button
+		to apply the changes. You can switch pages (but not paths or nodes) before you apply
+		and any values that you have changed will be correctly saved when you apply. You need to apply changes once per path or node.
+		Edit buttons are not on the "Creation", "Management", or "Actions" pages.<br>
+		<br>
+		The "Start Cam" button will allow you to see what your cut scene will look like. It will temporarily hide the CSCE so that it
+		doesn't block your view of what's happening. The camera will start from whichever path is selected. So if you have multiple paths
+		that are linked together, it will only test the selected and any that come after it.<br>
+		<br>
+		The "Save Mission" button will save the mission whether or not anything has been changed; and it does not have a "save as" option,
+		it will only do a normal save.
+	</h3>
+	<br>
+	<hr class="Line2">
+	<br>
+	<a name="Instruction6"></a>
+	<h1>
+		Setting Variable Values:</h1>
+	<a name="Instruction7"></a>
+	<h2>
+		General Rules:</h2>
+	<h3>
+		No numbers can be negative or zero unless otherwise noted. Be careful when using values of 1 or less. Distances can use decimal
+		point values (floats), but most other values should use whole integers only (ints). Don't stray too far from the default values;
+		for example- if the default is 6, you probably shouldn't change it to 9006. Capitalization and the order you put the variables
+		in shouldn't matter.
+	</h3>
+	<br>
+	<hr class="Line2">
+	<br>
+	<a name="Instruction28"></a>
+	<h1>
+		Other Variables:</h1>
+	<h3>
+		Here's a brief description of some of the default global variables. For the values of these variables, follow the
+		<a href="Usage_Instructions.html#Instruction7" target="_top">general rules</a>.<br>
+		<br>
+	</h3>
+	<table class="Values1">
+		<tr>
+			<th>
+				Variable name
+			</th>
+			<th>
+				Description of what it does
+			</th>
+			<th>
+				File it's found in
+			</th>
+		</tr>
+		<tr>
+			<td>
+				$CSC_Speed
+			</td>
+			<td>
+				Default movement speed. Speed is not a 0.0 to 1.0 value even though some Torque documents may say that it is.
+			</td>
+			<td>
+				CSC_userValues.cs
+			</td>
+		</tr>
+		<tr>
+			<td class="Rows1">
+				$CSC_Name
+			</td>
+			<td class="Rows1">
+				Default path name.
+			</td>
+			<td class="Rows1">
+				CSC_userValues.cs
+			</td>
+		</tr>
+		<tr>
+			<td>
+				$CSC_Client
+			</td>
+			<td>
+				Default client.
+			</td>
+			<td>
+				CSC_userValues.cs
+			</td>
+		</tr>
+		<tr>
+			<td class="Rows1">
+				$CSC_Datablock
+			</td>
+			<td class="Rows1">
+				Default shake datablock.
+			</td>
+			<td class="Rows1">
+				CSC_userValues.cs
+			</td>
+		</tr>
+		<tr>
+			<td>
+				$pref::Player::defaultFov
+			</td>
+			<td>
+				Default field of view. This value is part of stock T3D and used other places, it is not for the Cut Scene Cam only.
+			</td>
+			<td>
+				CSC_userValues.cs
+			</td>
+		</tr>
+		<tr>
+			<td class="Rows1">
+				$pref::Player::zoomSpeed
+			</td>
+			<td class="Rows1">
+				Default zoom speed. This value is part of stock T3D and used other places, it is not for the Cut Scene Cam only.
+			</td>
+			<td class="Rows1">
+				CSC_userValues.cs
+			</td>
+		</tr>
+		<tr>
+			<td>
+				$CSC_DisableDeleteMode
+			</td>
+			<td>
+				Change this to 1 to get rid of the "Delete Selected Path" and "Delete Selected Node" buttons, leave it 0 to have those buttons available.
+				This is to prevent accidents since there is no undoing a deletion.
+			</td>
+			<td>
+				CSC_Editor.cs
+			</td>
+		</tr>
+		<tr>
+			<td class="Rows1">
+				$CSC_SelectNextMarker
+			</td>
+			<td class="Rows1">
+				When editing a pre-existing path or node, after changes are made to the current one, should the next one selected be lower or higher?
+				This value can also be changed from the <a href="Usage_Instructions.html#Instruction26" target="_top">Actions page</a> of the CSCE.
+			</td>
+			<td class="Rows1">
+				CSC_Editor.cs
+			</td>
+		</tr>
+	</table>
+	<br>
+	<hr class="Line2">
+	<br>
+	<a name="Instruction38"></a>
+	<h1>
+		Adding New Datablocks:</h1>
+	<h3>
+		The only time it should be necessary to add new pathed camera datablocks is when you want two or more different paths in your
+		game to use different shake settings. All other options are done per-path or per-node, meaning that making a new datablock
+		for them is not needed.<br>
+		<br>
+		In the file <i>CSC_userValues.cs</i> you will see both a default datablock and an example of how to create a new datablock.
+		Make sure to give your new datablock a unique name, and to set all 3 <i>camShakeFreq</i> values to be different from each other.
+	</h3>
+	<br>
+	<hr class="Line2">
+	<br>
+	<a name="Instruction13"></a>
+	<h1>
+		Application Programming Interface (API):</h1>
+	<h3>
+		This section contains script commands that may be used by you (the developer) to perform a wide variety of different actions.
+		These commands are for use in conjunction with your own custom code, so some experience with TorqueScript may be necessary to
+		perform certain tasks with these commands.
+	</h3>
+	<a name="Instruction16"></a>
+	<h2>
+		Starting a Cut Scene:</h2>
+	<h3>
+		Now that you've used the CSCE to setup the perfect scene, you'll need that scene to actually play when you want it to.
+		This can be done from a simply function call.
+	</h3>
+	<pre>
+startCameraGoing(%path, %client);
+</pre>
+	<h3>
+		The above call can be placed into any script that you have. Both <i>%path</i> and <i>%client</i> can just use the default
+		global values if you don't give another value. Below is an example of how this call can be made from a trigger. It will
+		play a cut scene one time as soon as the trigger is entered.
+	</h3>
+	<pre>
+datablock TriggerData(cutSceneTrigger)
+{
+    tickPeriodMS = 125;
+};
+
+//This plays a cut scene after the trigger is entered by a player
+function cutSceneTrigger::onEnterTrigger(%this, %trigger, %obj)
+{
+    //Check to see if a player triggered this
+    if (%obj.getClassName() $= "Player")
+    {
+        //Don't play the cut scene a second time
+        if (!%trigger.doneOnce)
+        {
+            //We've now triggered this trigger once
+            %trigger.doneOnce = true;
+
+			//This just uses the default path which is normally "Path01"
+            %path = $CSC_Name;
+			//Other %client values could include $CSC_Client; or "LocalClientConnection"; or ClientGroup.getObject(0);
+            %client = %obj.client;
+
+            //Start the cut scene
+            startCameraGoing(%path, %client);
+        }
+    }
+}
+</pre>
+	<h3>
+		Below is an example of how you can start a cut scene once the player collects an item.
+	</h3>
+	<pre>
+datablock StaticShapeData(CutSceneItem1)
+{
+    category = "CutSceneItems";
+    //Change what shape is used
+    shapeFile = "art/shapes/items/patch/healthpatch.dts";
+};
+
+function CutSceneItem1::onCollision(%this, %obj, %col)
+{
+    //Make sure a live player picked up the item
+    if (%col.getClassName() $= "Player" && %col.getState() !$= "Dead")
+    {
+        //Delete the item
+        %obj.delete();
+        //Start the cut scene using default values
+        startCameraGoing();
+    }
+}
+</pre>
+	<a name="Instruction14"></a>
+	<h2>
+		Choreography:</h2>
+	<h3>
+		While the Cut Scene Cam mainly deals with camera work, there are a few features to you with choreographing your cut scene as well.
+		While your cut scene is playing, you will likely want other things to happen at the same time so that the player can see those things.
+		The <i>Function Call</i> feature and <i>onEnd</i> function can help you with this timing. The Function Call feature can be
+		accessed from the <a href="Usage_Instructions.html#Instruction26" target="_top">Paths page</a> of the CSCE.<br>
+		<br>
+		At the start of each path any script that's set as the Function Call will be executed using an <i>eval</i>. For example, you
+		could use the following as a Function Call to hide the <i>PlayGui</i>.
+</h3>
+	<pre>
+HudlessPlayGui.toggle();
+</pre>
+	<h3>
+		But what if you want to script to be executed in the middle of a path instead of at the start? You could put a <i>schedule</i>
+		within the function that's being called; or you could put a schedule in the Function Call itself. Here are a couple of examples
+		for how you could do that. Of course you would only use one of these at a time, and without the comments (which are there to
+		illustrate how schedules should be formatted).
+</h3>
+	<pre>
+//schedule(%timeMS, %obj, %function, %varA, %varB);
+schedule(1000, 0, setFov, 70);
+//%obj.schedule(%timeMS, %function, %varA, %varB);
+HudlessPlayGui.schedule(1000, toggle);
+</pre>
+	<h3>
+		If your cut scene needs complex choreography that requires more than one function to be called, the best way to handle that
+		is probably to make a new function, then call that function using the Function Call feature, and have it call any other
+		functions as needed.<br>
+		<br>
+		After a cut scene (which can contain multiple paths that are used in a row) is completely over, a function named <i>onEnd</i>
+		is called. This function can be used to reset or load things after the cut scene is done. You can find this function within
+		the file <i>CSC_userValues.cs</i>.</h3>
+	<a name="Instruction37"></a>
+	<h2>
+		Path Alteration Scripting:</h2>
+	<h3>
+		For any number of reasons, there may come a time when you'd like to change a path in your game while the game is running. Here
+		are a few functions that can be called from any custom script you create to help you do that.<br>
+		<br>
+		If you would like to reverse the direction which bots travel along a path, you can do so using the following command.
+	</h3>
+	<pre>
+reversePathOrder(%path);
+</pre>
+	<h3>
+		Where <i>%path</i> is the ID number or name of the path whose direction you would like to invert.<br>
+		<br>
+		However, reversing the path's direction while a bot is using the path can sometimes cause the bot to skip nodes; depending on
+		where the bot is along the path when the reverse happens. But at other times, the direction inversion will occur without issue.<br>
+		<br>
+		If you would like to move the whole path at once by a certain amount, you can do so using the following command.
+	</h3>
+	<pre>
+moveWholePath(%path, %offset);
+</pre>
+	<h3>
+		Where <i>%offset</i> is the amount you would like each axis of the path's position to change by. And of course if you'd like
+		to change the position of just one node, you can use the stock Torque command:
+	</h3>
+	<pre>
+%node.setPosition(%pos);
+</pre>
+	<h3>
+		Where <i>%node</i> is the ID number or name of the node whose position you would like to change, and <i>%pos</i> is the new position
+		you would like it to be located at.<br>
+		<br>
+		If you would like to change the scale of a path, you can do so using the following command.
+	</h3>
+	<pre>
+rescalePath(%path, %scale);
+</pre>
+	<h3>
+		Where <i>%scale</i> is the percentage you would like each axis to be rescaled by.<br>
+		<br>
+		For more information about these features, check the <a href="Usage_Instructions.html#Instruction35" target="_top">Path Management</a>
+		section above.
+	</h3>
+	<br>
+	<hr class="Line2">
+	<br>
+	<a name="Instruction12"></a>
+	<h1>
+		Overview of Source Code Changes:</h1>
+	<h3>
+		Within <i>guiFadeinBitmapCtrl.cpp</i> a new persist field was added. This new field is called <i>invert</i> and it determines whether a given
+		fade GUI is fading in or fading out.<br>
+		<br>
+		For documentation about any newly added engine methods for pathed camera, check the file <i>pathCamera.cpp</i> or use <i>%cam.dump(true);</i> where
+		<i>%cam</i> is a reference to a pathed camera.<br>
+		<br>
+		You may want to adjust some of the <i>CameraAndFOV</i> settings in the <i>gameFunctions.cpp</i> file.<br>
+		<br>
+		For more information about the stock settings and options in T3D, <a href="http://wiki.torque3d.org/main:documentation" target="_blank">check
+		the documentation here</a>.
+	</h3>
+	<br>
+	<hr class="Line2">
+	<br>
+	<a name="Instruction47"></a>
+	<h1>
+		Known Issues:</h1>
+	<ul class="List1">
+		<li>The "Ahead" focal mode maybe slightly inaccurate from where it should face along the path and has minor jittering. These are both caused by not
+		being able to get the camera's future position along its path without actually having it move to that position. A new function to do that needs
+		added in the cameraSpline.cpp/h files.</li>
+		<li>The camera may jitter a bit if set to follow a moving object (such as a bot).</li>
+		<li>FOV may not be set properly if the camera pauses at that node.</li>
+		<li>It isn't setting the FOV fast enough on the first node, and sets it too fast on the last one. This means that it renders odd for about 1 frame (at 30 FPS).</li>
+		<li>Currently you have to click the fade color selector multiple times before it comes up.
+		<li>There are limits on the size a path can be. The maximum is at most 64 nodes; but possibly even as low as 45 or 20. There's also a minimum of 2
+		nodes per path. If you want a camera to be stationary, just place 2 nodes at the same position.</li>
+	</ul>
+</body>
+</html>

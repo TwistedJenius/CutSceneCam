@@ -1,0 +1,97 @@
+//-----------------------------------------------------------------------------
+// Copyright (c) 2018 Twisted Jenius LLC
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
+//-----------------------------------------------------------------------------
+
+
+//--- OBJECT WRITE BEGIN ---
+%guiContent = new GuiControl(FadeGui) {
+   position = "0 0";
+   extent = "1024 768";
+   minExtent = "8 2";
+   horizSizing = "relative";
+   vertSizing = "relative";
+   profile = "GuiDefaultProfile";
+   visible = "1";
+   active = "1";
+   tooltipProfile = "GuiToolTipProfile";
+   hovertime = "1000";
+   isContainer = "1";
+   canSave = "1";
+   canSaveDynamicFields = "1";
+   noCursor = "1";
+
+   new GuiFadeinBitmapCtrl(FadeGuiCtrl) {
+      fadeColor = "0 0 0 1";
+      fadeInTime = "1000";
+      waitTime = "2000";
+      fadeOutTime = "1000";
+      fadeInEase = "0 0 -1 -1";
+      fadeOutEase = "0 0 -1 -1";
+      done = "1";
+      wrap = "0";
+      position = "0 0";
+      extent = "1024 768";
+      minExtent = "8 2";
+      horizSizing = "relative";
+      vertSizing = "relative";
+      profile = "GuiDefaultProfile";
+      visible = "1";
+      active = "1";
+      tooltipProfile = "GuiToolTipProfile";
+      hovertime = "1000";
+      isContainer = "0";
+      canSave = "1";
+      canSaveDynamicFields = "0";
+      invert = "true";
+   };
+};
+//--- OBJECT WRITE END ---
+
+function openFadeGui(%fade, %black, %color)
+{
+	if (%fade < 1)
+		%fade = 1000;
+
+	if (%black < 1)
+		%black = 1000;
+
+	if (%color $= "")
+		%color = "0 0 0 1";
+
+    FadeGuiCtrl.done = 0;
+    FadeGuiCtrl.fadeInTime = %fade;
+    FadeGuiCtrl.waitTime = %black;
+    FadeGuiCtrl.fadeOutTime = %fade;
+    FadeGuiCtrl.fadeColor = %color;
+
+    Canvas.pushDialog(FadeGui);
+}
+
+function FadeGuiCtrl::onDone(%this)
+{
+    schedule(100, 0, popGuiLater, %this);
+}
+
+function popGuiLater(%this)
+{
+	%this.done = 1;
+	Canvas.popDialog(FadeGui);
+}

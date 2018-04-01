@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en-US">
+<head>
+	<title>T3D Installation Instructions</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<meta name="keywords" content="T3D, installation, instructions, cut, scene, cam">
+	<meta name="description" content="Installation instructions for the Cut Scene Cam.">
+	<link href="style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<h1>
+		Table of Contents:</h1>
+	<a href="T3D_Install_Instructions.html#Instruction1" target="_top">Custom Install Instructions</a><br>
+	<a class="Steps1" href="T3D_Install_Instructions.html#Step1" target="_top">Step 1</a><br>
+	<a class="Steps1" href="T3D_Install_Instructions.html#Step2" target="_top">Step 2</a><br>
+	<a class="Steps1" href="T3D_Install_Instructions.html#Step3" target="_top">Step 3</a><br>
+	<a class="Steps1" href="T3D_Install_Instructions.html#Step4" target="_top">Step 4</a><br>
+	<a class="Steps1" href="T3D_Install_Instructions.html#Step5" target="_top">Step 5</a><br>
+	<a class="Steps1" href="T3D_Install_Instructions.html#Step6" target="_top">Step 6</a><br>
+	<a href="T3D_Install_Instructions.html#Instruction2" target="_top">Optional Custom Install Instructions</a><br>
+	<a class="Steps1" href="T3D_Install_Instructions.html#Step7" target="_top">Step 1</a><br>
+	<a name="Instruction3"></a>
+	<br>
+	<hr class="Line2">
+	<br>
+	<a name="Instruction1"></a>
+	<br>
+	<h1>
+		Custom Install Instructions:</h1>
+	<h3>
+		A custom install should be used when integrating the Cut Scene Cam into a pre-existing project. The instructions in this section are mandatory
+		for a custom install, optional instructions are below. These instructions are for a new project created using the "Full" template in
+		<a href="https://github.com/GarageGames/Torque3D" target="_blank"><i>T3D 3.10.0</i></a>.<br>
+		<br>
+		After you have fully finished the installation process, open up a new mission within that project and press "alt s" to open the Cut Scene Cam Editor.
+		Read the text and tooltips within the editor and you should have your camera up and running in no time.
+		If you need further assistance, check the <a href="Usage_Instructions.html" target="_top">Usage Instructions</a>.
+	</h3>
+	<br>
+	<a name="Step1"></a>
+	<h2>
+		Step 1:</h2>
+	<h3>
+		Backup all files that are going to be changed. They are:<br>
+		<br>
+		<i>source/gui/game/guiFadeinBitmapCtrl.h<br>
+			source/gui/game/guiFadeinBitmapCtrl.cpp<br>
+			source/T3D/pathCamera.h<br>
+			source/T3D/pathCamera.cpp<br>
+			scripts/server/scriptExec.cs</i>
+	</h3>
+	<br>
+	<hr class="Line1">
+	<br>
+	<a name="Step2"></a>
+	<h2>
+		Step 2:</h2>
+	<h3>
+		In the source folder, write over the stock files with the files that came with the CSC:<br>
+		<br>
+		<i>source/gui/game/guiFadeinBitmapCtrl.h<br>
+			source/gui/game/guiFadeinBitmapCtrl.cpp<br>
+			source/T3D/pathCamera.h<br>
+			source/T3D/pathCamera.cpp</i>
+	</h3>
+	<br>
+	<hr class="Line1">
+	<br>
+	<a name="Step3"></a>
+	<h2>
+		Step 3:</h2>
+	<h3>
+		Recompile the engine. If you are unsure how to do this, <a href="http://wiki.torque3d.org/wiki:_coder-start" target="_blank">check here for further instructions</a>.<br>
+	</h3>
+	<br>
+	<hr class="Line1">
+	<br>
+	<a name="Step4"></a>
+	<h2>
+		Step 4:</h2>
+	<h3>
+		File- scripts/server/scriptExec.cs<br>
+		After the line:<br>
+	</h3>
+	<pre>
+// Load turret support scripts
+exec("./turret.cs");
+</pre>
+	<h3>
+		Add:<br>
+	</h3>
+	<pre>
+exec("./CSC_userValues.cs");
+</pre>
+	<br>
+	<hr class="Line1">
+	<br>
+	<a name="Step5"></a>
+	<h2>
+		Step 5:</h2>
+	<h3>
+		In the folder: scripts/server/<br>
+		Add the following files:<br>
+		<br>
+		<i>CSC_pathCamera.cs<br>
+			CSC_pathManagement.cs<br>
+			CSC_userValues.cs</i>
+	</h3>
+	<br>
+	<hr class="Line1">
+	<br>
+	<a name="Step6"></a>
+	<h2>
+		Step 6:</h2>
+	<h3>
+		Add the following editor files to the correct locations:<br>
+		<br>
+		<i>tools/worldEditor/gui/CSC_Editor.gui<br>
+			tools/worldEditor/scripts/CSC_Editor.cs<br>
+			tools/worldEditor/scripts/CSC_PathEditor.cs<br>
+		</i>
+	</h3>
+	<hr class="Line2">
+	<br>
+	<a name="Instruction2"></a>
+	<br>
+	<h1>
+		Optional Custom Install Instructions:</h1>
+	<h3>
+		These instructions are an optional part of a custom install. This will add the <a href="Usage_Instructions.html#Instruction23"
+			target="_blank">Cut Scene Cam Editor</a> to the bottom of your "Edit" menu within the mission editor. If you're having problems
+		while doing a custom installation, try skipping this part. This step is not included in the quick install files.<br>
+	</h3>
+	<br>
+	<a name="Step7"></a>
+	<h2>
+		Step 1:</h2>
+	<h3>
+		File- tools/worldEditor/scripts/menus.ed.cs<br>
+		Function- EditorGui::buildMenus()<br>
+		After the line:<br>
+	</h3>
+	<pre>
+      item[16] = "PostEffect Manager" TAB "" TAB "Canvas.pushDialog(PostFXManager);";
+</pre>
+	<h3>
+		Add:<br>
+	</h3>
+	<pre>
+      item[17] = "-";
+      item[18] = "Cut Scene Cam Editor" TAB "Alt S" TAB "toggleCSCEditor(1);";
+</pre>
+</body>
+</html>
